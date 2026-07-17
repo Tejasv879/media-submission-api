@@ -382,8 +382,8 @@ Many Media Submissions
 - Media Validation
 - User Media APIs
 - Administrator Approval APIs
-- Email Notification Service
 - PostgreSQL Integration
+- Email notification service implementation (configuration pending)
 - Prisma ORM
 - Swagger Documentation
 - Unit Tests
@@ -392,7 +392,7 @@ Many Media Submissions
 
 ## ❌ Not Completed
 
-- No known incomplete core requirements.
+- Email Notification Service
 
 ## 🔮 Improvements with More Time
 
