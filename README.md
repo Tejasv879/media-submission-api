@@ -16,7 +16,6 @@ A secure backend REST API built with **NestJS**, **TypeScript**, **Prisma ORM**,
 - Prisma ORM
 - Admin Dashboard APIs
 - Approve / Reject Media Submissions
-- Email Notifications using Nodemailer
 - Swagger API Documentation
 - Unit Tests using Jest
 - Environment-based Configuration
@@ -31,7 +30,6 @@ A secure backend REST API built with **NestJS**, **TypeScript**, **Prisma ORM**,
 - Prisma ORM
 - JWT Authentication
 - Multer
-- Nodemailer
 - Swagger
 - Jest
 
@@ -116,10 +114,6 @@ EMAIL_USER=
 EMAIL_PASSWORD=
 EMAIL_FROM=
 ```
-
-> **Important:** Never commit the `.env` file to GitHub.
-
----
 
 # 🗄 Database Setup
 
@@ -237,9 +231,10 @@ Bearer <your_token>
 |---------|----------|
 | POST | /api/media |
 | GET | /api/media/my-submissions |
+| GET | /api/media/:id/view |
+| GET | /api/media/:id/download |
 | GET | /api/media/:id |
 | DELETE | /api/media/:id |
-
 ---
 
 ## Admin APIs
@@ -273,15 +268,25 @@ Uploaded files are stored locally inside the **uploads/** directory.
 
 ---
 
-# 📧 Email Notifications
+# 👤 Administrator Account
 
-Whenever an administrator approves or rejects a submission, the application sends an email notification to the user.
+An administrator account is **not created through the registration API**.
 
-If email delivery fails:
+To create the administrator, run:
 
-- The submission status is still updated.
-- The application continues running.
-- The error is logged.
+```bash
+npm run prisma:seed
+```
+
+This command creates a default administrator account with the following credentials:
+
+| Email | Password |
+|--------|----------|
+| admin@example.com | Admin@123 |
+
+Use these credentials to log in as an administrator and access the admin-only APIs.
+
+> **Note:** These credentials are intended only for local development and assessment purposes. For production deployments, they should be changed immediately after seeding.
 
 ---
 
@@ -393,17 +398,6 @@ Many Media Submissions
 ## ❌ Not Completed
 
 - Email Notification Service
-
-## 🔮 Improvements with More Time
-
-- Docker support
-- Cloud Storage Integration
-- Refresh Tokens
-- Email Queue
-- Rate Limiting
-- Better Monitoring and Logging
-
----
 
 # 👨‍💻 Author
 
