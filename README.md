@@ -1,50 +1,414 @@
-# Media Submission and Approval API
+# 📁 Media Submission and Approval API
 
-A NestJS backend where users upload media for review and administrators approve or reject it. The application emails the user after a decision.
+A secure backend REST API built with **NestJS**, **TypeScript**, **Prisma ORM**, and **PostgreSQL** for managing media submissions. Authenticated users can upload media files for review, while administrators can approve or reject submissions. Users receive email notifications whenever a decision is made.
 
-## Stack
+---
 
-NestJS, TypeScript, PostgreSQL, Prisma, JWT, Multer local uploads, Nodemailer, Jest, and Swagger.
+# 🚀 Features
 
-## Setup
+- User Registration and Login
+- JWT Authentication
+- Role-Based Authorization (USER / ADMIN)
+- Media Upload using Multer
+- File Type Validation
+- File Size Validation (10 MB)
+- PostgreSQL Database
+- Prisma ORM
+- Admin Dashboard APIs
+- Approve / Reject Media Submissions
+- Email Notifications using Nodemailer
+- Swagger API Documentation
+- Unit Tests using Jest
+- Environment-based Configuration
 
-1. Copy `.env.example` to `.env` and set `DATABASE_URL` and a long `JWT_SECRET`.
-2. Create a PostgreSQL database named `media_submission` (or change the URL).
-3. Install packages: `npm install`
-4. Generate Prisma Client: `npx prisma generate`
-5. Create the database tables: `npx prisma migrate dev --name init`
-6. Seed the administrator: `npm run prisma:seed`
-7. Start the API: `npm run start:dev`
+---
 
-The seeded admin is `admin@example.com` with password `Admin@123`. Change this for any real deployment.
+# 🛠 Technology Stack
 
-## Environment variables
+- NestJS
+- TypeScript
+- PostgreSQL
+- Prisma ORM
+- JWT Authentication
+- Multer
+- Nodemailer
+- Swagger
+- Jest
 
-See `.env.example`. Set `EMAIL_ENABLED=false` to run locally without an SMTP provider. With it set to `true`, fill in the SMTP details (Mailtrap is a good testing option). Email errors are logged and do not undo a decision.
+---
 
-## API documentation
+# 📂 Project Structure
 
-Once running, open `http://localhost:3000/api/docs`. All routes use the `/api` prefix. Log in first, copy `accessToken`, then use Swagger's **Authorize** button with `Bearer <token>`.
+```
+src/
+ ├── admin/
+ ├── auth/
+ ├── common/
+ ├── email/
+ ├── media/
+ ├── prisma/
+ ├── app.module.ts
+ └── main.ts
 
-## Main endpoints
+prisma/
+ ├── migrations/
+ ├── schema.prisma
+ └── seed.ts
 
-| Method | Route | Access |
-| --- | --- | --- |
-| POST | `/api/auth/register` | Public |
-| POST | `/api/auth/login` | Public |
-| POST | `/api/media` | Logged-in user; multipart fields `title`, `description`, `file` |
-| GET | `/api/media/my-submissions?status=PENDING` | Owner |
-| GET / DELETE | `/api/media/:id` | Owner (admin may read) |
-| GET | `/api/admin/media?status=PENDING&page=1&limit=10` | Admin |
-| PATCH | `/api/admin/media/:id/approve` | Admin |
-| PATCH | `/api/admin/media/:id/reject` | Admin; JSON `{ "reason": "..." }` |
+test/
+```
 
-Allowed uploads are PDF, JPEG, PNG, WebP, MP4, and WebM up to 10 MB. Files go to `uploads/`, which is deliberately ignored by Git. New submissions begin as `PENDING`; only PENDING submissions can be deleted, approved, or rejected.
+---
 
-## Tests
+# ⚙️ Installation
 
-Run `npm test`. The included tests cover successful approval, prevention of double approval, and ownership protection.
+Clone the repository
 
-## Assumptions and improvements
+```bash
+git clone https://github.com/Tejasv879/media-submission-api.git
+```
 
-Local disk storage is used for assessment simplicity; production should use object storage (such as S3) and signed download URLs. The app keeps emails synchronous to make the flow easy to follow; production could queue them. Add rate limiting, refresh tokens, richer image/video inspection, and Docker if more time is available.
+Move inside the project
+
+```bash
+cd media-submission-api
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+---
+
+# 🔐 Environment Variables
+
+Copy
+
+```text
+.env.example
+```
+
+to
+
+```text
+.env
+```
+
+Configure the following values.
+
+```env
+DATABASE_URL=
+
+JWT_SECRET=
+JWT_EXPIRES_IN=1d
+
+PORT=3000
+
+MAX_FILE_SIZE_BYTES=10485760
+
+EMAIL_ENABLED=false
+
+EMAIL_HOST=
+EMAIL_PORT=587
+EMAIL_USER=
+EMAIL_PASSWORD=
+EMAIL_FROM=
+```
+
+> **Important:** Never commit the `.env` file to GitHub.
+
+---
+
+# 🗄 Database Setup
+
+Create a PostgreSQL database.
+
+Example:
+
+```
+media_submission
+```
+
+Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+Run database migrations
+
+```bash
+npx prisma migrate dev --name init
+```
+
+Seed the administrator account
+
+```bash
+npm run prisma:seed
+```
+
+---
+
+# 👤 Seeded Administrator
+
+```
+Email:
+admin@example.com
+
+Password:
+Admin@123
+```
+
+These credentials are for local development only.
+
+---
+
+# ▶ Running the Application
+
+Development Mode
+
+```bash
+npm run start:dev
+```
+
+Production Build
+
+```bash
+npm run build
+```
+
+Run Production
+
+```bash
+npm run start:prod
+```
+
+---
+
+# 🧪 Running Tests
+
+Run all tests
+
+```bash
+npm test
+```
+
+---
+
+# 📖 Swagger Documentation
+
+After starting the application, open:
+
+```
+http://localhost:3000/api/docs
+```
+
+Swagger allows testing every endpoint directly from the browser.
+
+For protected endpoints:
+
+1. Login
+2. Copy the JWT Access Token
+3. Click **Authorize**
+4. Enter
+
+```
+Bearer <your_token>
+```
+
+---
+
+# 📌 API Endpoints
+
+## Authentication
+
+| Method | Endpoint |
+|---------|----------|
+| POST | /api/auth/register |
+| POST | /api/auth/login |
+
+---
+
+## User APIs
+
+| Method | Endpoint |
+|---------|----------|
+| POST | /api/media |
+| GET | /api/media/my-submissions |
+| GET | /api/media/:id |
+| DELETE | /api/media/:id |
+
+---
+
+## Admin APIs
+
+| Method | Endpoint |
+|---------|----------|
+| GET | /api/admin/media |
+| PATCH | /api/admin/media/:id/approve |
+| PATCH | /api/admin/media/:id/reject |
+
+---
+
+# 📤 Supported Uploads
+
+Supported Media Types
+
+- PDF
+- JPEG
+- PNG
+- WebP
+- MP4
+- WebM
+
+Maximum File Size
+
+```
+10 MB
+```
+
+Uploaded files are stored locally inside the **uploads/** directory.
+
+---
+
+# 📧 Email Notifications
+
+Whenever an administrator approves or rejects a submission, the application sends an email notification to the user.
+
+If email delivery fails:
+
+- The submission status is still updated.
+- The application continues running.
+- The error is logged.
+
+---
+
+# 🔒 Security Features
+
+- Password hashing using bcrypt
+- JWT Authentication
+- Role-based Authorization
+- Ownership Validation
+- DTO Validation using class-validator
+- Protected Routes
+- Environment Variables for Secrets
+
+---
+
+# 🧱 Database Models
+
+## User
+
+- ID
+- Name
+- Email
+- Password
+- Role
+- Created At
+- Updated At
+
+---
+
+## Media Submission
+
+- ID
+- Title
+- Description
+- File Name
+- File URL
+- MIME Type
+- File Size
+- Status
+- Rejection Reason
+- User ID
+- Created At
+- Updated At
+
+Relationship
+
+```
+One User
+      │
+      │
+      ▼
+Many Media Submissions
+```
+
+---
+
+# 📄 Assumptions
+
+- Local file storage is used for simplicity.
+- Swagger is used for API testing.
+- Email configuration is environment based.
+- PostgreSQL is running locally.
+
+---
+
+# ⚠ Limitations
+
+- Local storage instead of cloud storage.
+- Email sending is synchronous.
+- No refresh tokens.
+- No Docker configuration.
+- No background job queue.
+
+---
+
+# 🚀 Future Improvements
+
+- Cloudinary or AWS S3 Integration
+- Docker Support
+- Refresh Tokens
+- BullMQ Email Queue
+- Rate Limiting
+- Media Download Authorization
+- CI/CD Pipeline
+- Better Logging
+- Redis Caching
+
+---
+
+# 📝 Submission Notes
+
+## ✅ Completed
+
+- User Authentication using JWT
+- Role-Based Authorization
+- User Registration and Login
+- Media Upload
+- Media Validation
+- User Media APIs
+- Administrator Approval APIs
+- Email Notification Service
+- PostgreSQL Integration
+- Prisma ORM
+- Swagger Documentation
+- Unit Tests
+- README Documentation
+- Environment Configuration
+
+## ❌ Not Completed
+
+- No known incomplete core requirements.
+
+## 🔮 Improvements with More Time
+
+- Docker support
+- Cloud Storage Integration
+- Refresh Tokens
+- Email Queue
+- Rate Limiting
+- Better Monitoring and Logging
+
+---
+
+# 👨‍💻 Author
+
+**Tejasv Agarwal**
+
+GitHub
+
+https://github.com/Tejasv879
